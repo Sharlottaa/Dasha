@@ -8,11 +8,9 @@ public interface BankAtmService {
     BankAtmDTO createBankAtm(String name, String address, Boolean status, Long bankId,
                              Long bankOfficeId, Long employeeId, Boolean isIssuingMoney,
                              Boolean isDepositingMoney, Integer servicingCost);
-
     BankAtm getBankAtmById(Long id);
 
     BankAtmDTO getBankAtmByIdDto(Long id);
-
     BankAtmDTO updateBankAtm(Long id, String name, String address, Boolean status, Long bankId,
                              Long bankOfficeId, Long employeeId, Boolean isIssuingMoney,
                              Boolean isDepositingMoney, Integer servicingCost);
