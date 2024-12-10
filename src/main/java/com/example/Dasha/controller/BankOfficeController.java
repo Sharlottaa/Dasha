@@ -52,7 +52,6 @@ public class BankOfficeController {
         return bankOfficeService.getBankOfficeByIdDto(id);
     }
 
-    // изменение данных в банковском офисе
     @Operation(summary = "Изменение данных в банковском офисе по ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Данные изменены",
