@@ -2,6 +2,7 @@ package com.example.Dasha.service.impl;
 
 import com.example.Dasha.dto.BankOfficeDTO;
 import com.example.Dasha.mapper.BankOfficeMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.dto.BankOfficeDTO;
 import com.example.Dasha.entity.*;
@@ -18,7 +19,7 @@ public class BankOfficeServiceImpl implements BankOfficeService {
     private final BankRepository bankRepository;
     private final BankService bankService;
     private final BankOfficeMapper bankOfficeMapper;
-
+    @Transactional
     @Override
     public BankOfficeDTO createBankOffice(Long bankId, String name, String address, Boolean status,
                                           Boolean canPlaceAtm, Boolean canIssueLoan, Boolean isIssuingMoney,
@@ -41,18 +42,18 @@ public class BankOfficeServiceImpl implements BankOfficeService {
         bankOfficeRepository.save(bankOffice);
         return bankOfficeMapper.toDto(bankOffice);
     }
-
+    @Transactional
     @Override
     public BankOffice getBankOfficeById(Long id) {
         return bankOfficeRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Bank Office not found with id " + id));
     }
-
+    @Transactional
     @Override
     public BankOfficeDTO getBankOfficeByIdDto(Long id) {
         return bankOfficeMapper.toDto(getBankOfficeById(id));
     }
-
+    @Transactional
     @Override
     public BankOfficeDTO updateBankOffice(Long id, Long bankId, String name, String address, Boolean status,
                                           Boolean canPlaceAtm, Boolean canIssueLoan, Boolean isIssuingMoney,
@@ -70,7 +71,7 @@ public class BankOfficeServiceImpl implements BankOfficeService {
         bankOfficeRepository.save(bankOffice);
         return bankOfficeMapper.toDto(bankOffice);
     }
-
+    @Transactional
     @Override
     public void deleteBankOffice(Long id) {
         BankOffice bankOffice = getBankOfficeById(id);

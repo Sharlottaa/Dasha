@@ -1,6 +1,7 @@
 package com.example.Dasha.service.impl;
 
 import com.example.Dasha.mapper.CreditAccountMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.dto.CreditAccountDTO;
 import com.example.Dasha.entity.Bank;
@@ -11,8 +12,9 @@ import com.example.Dasha.repository.CreditAccountRepository;
 import com.example.Dasha.repository.UserRepository;
 import com.example.Dasha.service.*;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class CreditAccountServiceImpl implements CreditAccountService {
         user.getCreditAccounts().add(creditAccount);
         return userRepository.save(user);
     }
-
+    @Transactional
     @Override
     public CreditAccountDTO createCreditAccount(Long userId, Long bankId, LocalDate startDate, LocalDate endDate,
                                                 Integer loanAmount, Float interestRate, Long issuingEmployeeId,
@@ -59,18 +61,18 @@ public class CreditAccountServiceImpl implements CreditAccountService {
         addCreditAccountToUser(userId, creditAccount.getId());
         return creditAccountMapper.toDto(creditAccount);
     }
-
+    @Transactional
     @Override
     public CreditAccount getCreditAccountById(Long id) {
         return creditAccountRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Credit account not found with id " + id));
     }
-
+    @Transactional
     @Override
     public CreditAccountDTO getCreditAccountByIdDto(Long id) {
         return creditAccountMapper.toDto(getCreditAccountById(id));
     }
-
+    @Transactional
     @Override
     public CreditAccountDTO updateCreditAccount(Long id, Long paymentAccountId) {
         CreditAccount creditAccount = getCreditAccountById(id);
@@ -78,9 +80,18 @@ public class CreditAccountServiceImpl implements CreditAccountService {
         creditAccountRepository.save(creditAccount);
         return creditAccountMapper.toDto(creditAccount);
     }
-
+    @Transactional
     @Override
     public void deleteCreditAccount(Long id) {
         creditAccountRepository.deleteById(id);
     }
+    @Transactional
+    @Override
+    public List<CreditAccountDTO> getCreditAccountsByUserId(Long userId) {
+        List<CreditAccount> accounts = creditAccountRepository.findAllByUserId(userId);
+        return accounts.stream()
+                .map(creditAccountMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

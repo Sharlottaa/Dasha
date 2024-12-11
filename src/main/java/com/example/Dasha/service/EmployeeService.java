@@ -4,6 +4,7 @@ import com.example.Dasha.dto.EmployeeDTO;
 import com.example.Dasha.entity.Employee;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface EmployeeService {
     EmployeeDTO createEmployee(String fullName, LocalDate birthDate, String position, Long bankId,
@@ -17,4 +18,5 @@ public interface EmployeeService {
                                Boolean isRemote, Long bankOfficeId, Boolean canIssueLoans, Integer salary);
 
     void deleteEmployee(Long id);
+    List<EmployeeDTO> getAllEmployeesByBankId(Long bankId);
 }

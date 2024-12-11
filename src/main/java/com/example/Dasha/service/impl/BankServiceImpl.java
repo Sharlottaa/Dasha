@@ -1,6 +1,7 @@
 package com.example.Dasha.service.impl;
 
 import com.example.Dasha.mapper.BankMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.dto.BankDTO;
 import com.example.Dasha.entity.Bank;
@@ -14,7 +15,7 @@ public class BankServiceImpl implements BankService {
 
     private final BankRepository bankRepository;
     private final BankMapper bankMapper;
-
+    @Transactional
     @Override
     public BankDTO createBank(String name) {
         Bank bank = new Bank();
@@ -29,17 +30,17 @@ public class BankServiceImpl implements BankService {
         bankRepository.save(bank);
         return bankMapper.toDto(bank);
     }
-
+    @Transactional
     @Override
     public Bank getBankById(Long id) {
         return bankRepository.findById(id).orElseThrow(() -> new RuntimeException("Bank not found with id " + id));
     }
-
+    @Transactional
     @Override
     public BankDTO getBankByIdDto(Long id) {
         return bankMapper.toDto(getBankById(id));
     }
-
+    @Transactional
     @Override
     public BankDTO updateBank(Long id, String name) {
         Bank bank = getBankById(id);
@@ -47,7 +48,7 @@ public class BankServiceImpl implements BankService {
         bankRepository.save(bank);
         return bankMapper.toDto(bank);
     }
-
+    @Transactional
     @Override
     public void deleteBank(Long id) {
         bankRepository.deleteById(id);

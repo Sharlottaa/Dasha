@@ -1,6 +1,7 @@
 package com.example.Dasha.service.impl;
 
 import com.example.Dasha.mapper.UserMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.dto.UserDTO;
 import com.example.Dasha.entity.User;
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
+    @Transactional
     @Override
     public UserDTO createUser(String fullName, LocalDate birthDate, String workplace) {
         User user = new User();
@@ -28,18 +29,18 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return userMapper.toDto(user);
     }
-
+    @Transactional
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("User repository not found with id " + id));
     }
-
+    @Transactional
     @Override
     public UserDTO getUserByIdDto(Long id) {
         return userMapper.toDto(getUserById(id));
     }
-
+    @Transactional
     @Override
     public UserDTO updateUser(Long id, String fullName, String workplace) {
         User user = getUserById(id);
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return userMapper.toDto(user);
     }
-
+    @Transactional
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);

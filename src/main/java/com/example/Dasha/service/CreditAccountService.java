@@ -2,7 +2,7 @@ package com.example.Dasha.service;
 
 import com.example.Dasha.dto.CreditAccountDTO;
 import com.example.Dasha.entity.CreditAccount;
-
+import java.util.List;
 import java.time.LocalDate;
 
 public interface CreditAccountService {
@@ -18,4 +18,5 @@ public interface CreditAccountService {
     CreditAccountDTO updateCreditAccount(Long id, Long paymentAccountId);
 
     void deleteCreditAccount(Long id);
+    List<CreditAccountDTO> getCreditAccountsByUserId(Long userId);
 }

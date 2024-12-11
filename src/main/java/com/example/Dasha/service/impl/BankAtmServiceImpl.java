@@ -1,6 +1,7 @@
 package com.example.Dasha.service.impl;
 
 import com.example.Dasha.mapper.BankAtmMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.dto.BankAtmDTO;
 import com.example.Dasha.entity.*;
@@ -18,7 +19,7 @@ public class BankAtmServiceImpl implements BankAtmService {
     private final BankOfficeService bankOfficeService;
     private final EmployeeService employeeService;
     private final BankAtmMapper bankAtmMapper;
-
+    @Transactional
     @Override
     public BankAtmDTO createBankAtm(String name, String address, Boolean status, Long bankId,
                                     Long bankOfficeId, Long employeeId, Boolean isIssuingMoney,
@@ -40,7 +41,7 @@ public class BankAtmServiceImpl implements BankAtmService {
         bankAtmRepository.save(bankAtm);
         return bankAtmMapper.toDto(bankAtm);
     }
-
+    @Transactional
     @Override
     public BankAtm getBankAtmById(Long id) {
         return bankAtmRepository.findById(id).
@@ -51,8 +52,7 @@ public class BankAtmServiceImpl implements BankAtmService {
         return bankAtmMapper.toDto(getBankAtmById(id));
     }
 
-
-
+    @Transactional
     @Override
     public BankAtmDTO updateBankAtm(Long id, String name, String address, Boolean status, Long bankId,
                                     Long bankOfficeId, Long employeeId, Boolean isIssuingMoney,
@@ -71,7 +71,7 @@ public class BankAtmServiceImpl implements BankAtmService {
         bankAtmRepository.save(bankAtm);
         return bankAtmMapper.toDto(bankAtm);
     }
-
+    @Transactional
     @Override
     public void deleteBankAtm(Long id) {
         BankAtm bankAtm = getBankAtmById(id);

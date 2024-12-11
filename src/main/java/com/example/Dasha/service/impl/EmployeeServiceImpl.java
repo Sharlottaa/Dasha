@@ -1,6 +1,7 @@
 package com.example.Dasha.service.impl;
 import com.example.Dasha.dto.EmployeeDTO;
 import com.example.Dasha.mapper.EmployeeMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.entity.Bank;
 import com.example.Dasha.entity.BankOffice;
@@ -13,6 +14,8 @@ import com.example.Dasha.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final BankService bankService;
     private final BankOfficeService bankOfficeService;
     private final EmployeeMapper employeeMapper;
-
+    @Transactional
     @Override
     public EmployeeDTO createEmployee(String fullName, LocalDate birthDate, String position, Long bankId,
                                       Boolean isRemote, Long bankOfficeId, Boolean canIssueLoans, Integer salary) {
@@ -42,18 +45,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
         return employeeMapper.toDto(employee);
     }
-
+    @Transactional
     @Override
     public Employee getEmployeeById(Long id) {
         return employeeRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Employee not found with id " + id));
     }
-
+    @Transactional
     @Override
     public EmployeeDTO getEmployeeByIdDto(Long id) {
         return employeeMapper.toDto(getEmployeeById(id));
     }
-
+    @Transactional
     @Override
     public EmployeeDTO updateEmployee(Long id, String fullName, String position, Long bankId,
                                       Boolean isRemote, Long bankOfficeId, Boolean canIssueLoans, Integer salary) {
@@ -68,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
         return employeeMapper.toDto(employee);
     }
-
+    @Transactional
     @Override
     public void deleteEmployee(Long id) {
         Employee employee = getEmployeeById(id);
@@ -77,4 +80,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         bankRepository.save(bank);
         employeeRepository.deleteById(id);
     }
+    @Transactional
+    @Override
+    public List<EmployeeDTO> getAllEmployeesByBankId(Long bankId) {
+        List<Employee> employees = employeeRepository.findAllByBankId(bankId);
+        return employees.stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }

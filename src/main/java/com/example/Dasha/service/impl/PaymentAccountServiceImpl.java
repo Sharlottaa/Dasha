@@ -3,6 +3,7 @@ package com.example.Dasha.service.impl;
 
 import com.example.Dasha.dto.PaymentAccountDTO;
 import com.example.Dasha.mapper.PaymentAccountMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.Dasha.entity.Bank;
 import com.example.Dasha.entity.PaymentAccount;
@@ -14,6 +15,8 @@ import com.example.Dasha.service.BankService;
 import com.example.Dasha.service.PaymentAccountService;
 import com.example.Dasha.service.UserService;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
         user.getPaymentAccounts().add(paymentAccount);
         return userRepository.save(user);
     }
-
+    @Transactional
     @Override
     public PaymentAccountDTO createPaymentAccount(Long userId, Long bankId) {
         PaymentAccount paymentAccount = new PaymentAccount();
@@ -54,18 +57,18 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
         addPaymentAccountToUser(userId, paymentAccount.getId());
         return paymentAccountMapper.toDto(paymentAccount);
     }
-
+    @Transactional
     @Override
     public PaymentAccount getPaymentAccountById(Long id) {
         return paymentAccountRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Payment account Atm not found with id " + id));
     }
-
+    @Transactional
     @Override
     public PaymentAccountDTO getPaymentAccountByIdDto(Long id) {
         return paymentAccountMapper.toDto(getPaymentAccountById(id));
     }
-
+    @Transactional
     @Override
     public PaymentAccountDTO updatePaymentAccount(Long id, Integer amount) {
         PaymentAccount paymentAccount = getPaymentAccountById(id);
@@ -73,7 +76,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
         paymentAccountRepository.save(paymentAccount);
         return paymentAccountMapper.toDto(paymentAccount);
     }
-
+    @Transactional
     @Override
     public void deletePaymentAccount(Long id) {
         PaymentAccount paymentAccount = getPaymentAccountById(id);
@@ -82,4 +85,13 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
         bankRepository.save(bank);
         paymentAccountRepository.deleteById(id);
     }
+    @Transactional
+    @Override
+    public List<PaymentAccountDTO> getPaymentAccountsByUserId(Long userId) {
+        List<PaymentAccount> accounts = paymentAccountRepository.findAllByUserId(userId);
+        return accounts.stream()
+                .map(paymentAccountMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
 }
